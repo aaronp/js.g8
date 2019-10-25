@@ -6,13 +6,12 @@ import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 import sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild
 
 ThisBuild / organization := "$organization$"
-ThisBuild / scalaVersion := "$scala_version$"
 
-val projectName = "$name;format="norm"$"
+val projectName = "$name;format="camel"$"
 val username            = "$user_name;format="norm"$"
 val scalaTwelve         = "2.12.10"
 val scalaThirteen       = "2.13.0"
-val defaultScalaVersion = scalaThirteen
+val defaultScalaVersion = scalaTwelve
 
 name := projectName
 
@@ -23,7 +22,7 @@ enablePlugins(ParadoxPlugin)
 enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin) // see https://jonas.github.io/paradox-material-theme/getting-started.html
 
-scalaVersion := defaultScalaVersion
+ThisBuild / scalaVersion := defaultScalaVersion
 val scalaVersions = Seq(scalaTwelve)
 crossScalaVersions := scalaVersions //, scalaThirteen)
 
@@ -75,7 +74,7 @@ val commonSettings: Seq[Def.Setting[_]] = Seq(
 coverallsTokenFile := Option(
   (sbt.io.Path.userHome / ".sbt" / ".coveralls.\$projectName").asPath.toString)
 
-val "$name;format="norm"$"Project = crossProject(JSPlatform, JVMPlatform)
+val $name;format="camel"$Project = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .withoutSuffixFor(JVMPlatform)
   .in(file("ga"))
@@ -104,14 +103,14 @@ val "$name;format="norm"$"Project = crossProject(JSPlatform, JVMPlatform)
       "org.scalatest" %%% "scalatest" % "3.0.8" % "test"
     ))
 
-lazy val "$name;format="norm"$"ProjectJVM = "$name;format="norm"$"Project.jvm
-lazy val "$name;format="norm"$"ProjectJS = "$name;format="norm"$"Project.js
+lazy val $name;format="camel"$ProjectJVM = $name;format="camel"$Project.jvm
+lazy val $name;format="camel"$ProjectJS = $name;format="camel"$Project.js
 
 lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(SiteScaladocPlugin)
   .enablePlugins(ParadoxPlugin)
-  .aggregate("$name;format="norm"$"ProjectJVM, "$name;format="norm"$"ProjectJS)
+  .aggregate($name;format="camel"$ProjectJVM, $name;format="camel"$ProjectJS)
   .settings(
     publish := {},
     publishLocal := {}
@@ -130,7 +129,7 @@ siteSourceDirectory := target.value / "paradox" / "site" / "main"
 
 siteSubdirName in SiteScaladoc := "api/latest"
 
-git.remoteRepo := s"git@github.com:\$username/$name;format="norm"$.git"
+git.remoteRepo := s"git@github.com:\$username/$name;format="camel"$.git"
 ghpagesNoJekyll := true
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
@@ -154,17 +153,17 @@ lazy val makePage =
 makePage := {
   import eie.io._
   val jsArtifacts = {
-    val path: Path = (fullOptJS in ("$name;format="norm"$"ProjectJS, Compile)).value.data.asPath
+    val path: Path = (fullOptJS in ($name;format="camel"$ProjectJS, Compile)).value.data.asPath
     val dependencyFiles =
       path.getParent.find(_.fileName.endsWith("-jsdeps.js")).toList
     path :: dependencyFiles
   }
-  val jsResourceDir = (resourceDirectory in ("$name;format="norm"$"ProjectJS, Compile)).value.toPath
+  val jsResourceDir = (resourceDirectory in ($name;format="camel"$ProjectJS, Compile)).value.toPath
 
   val targetDir = (baseDirectory.value / "target" / "page").toPath.mkDirs()
 
   val sharedResourceDir =
-    (baseDirectory.value / ""$name;format="norm"$"" / "shared" / "src" / "main" / "resources").toPath
+    (baseDirectory.value / "$name;format="camel"$" / "shared" / "src" / "main" / "resources").toPath
 
   val sharedJsLibs = sharedResourceDir.children
 
