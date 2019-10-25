@@ -53,7 +53,7 @@ val scalacSettings = List(
 
 val commonSettings: Seq[Def.Setting[_]] = Seq(
   //version := parentProject.settings.ver.value,
-  organization := s"com.github.${username}",
+  organization := s"com.github.\${username}",
   scalaVersion := defaultScalaVersion,
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   autoAPIMappings := true,
@@ -71,8 +71,6 @@ val commonSettings: Seq[Def.Setting[_]] = Seq(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   }
-  // see http://www.scalatest.org/user_guide/using_scalatest_with_sbt
-  //(testOptions in Test) += (Tests.Argument(TestFrameworks.ScalaTest, "-h", s"target/scalatest-reports-${name.value}", "-oN"))
 )
 coverallsTokenFile := Option(
   (sbt.io.Path.userHome / ".sbt" / ".coveralls.\$projectName").asPath.toString)
@@ -173,7 +171,7 @@ makePage := {
   // always copy/clobber these
   val clobberFiles = (jsResourceDir.children ++ jsArtifacts).map { file =>
     val to = targetDir.resolve(file.fileName)
-    sLog.value.info(s"""cp ${file.fileName} to $to""".stripMargin)
+    sLog.value.info(s"""cp \${file.fileName} to \$to""".stripMargin)
     (file.toFile, to.toFile)
   }
   IO.copy(clobberFiles, CopyOptions().withOverwrite(true))

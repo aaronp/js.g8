@@ -1,6 +1,5 @@
-package countdown
+package $package;format="lower,package"$
 
-import ga.AlgoSettings
 import scalatags.JsDom.all.{value, _}
 
 import scala.collection.mutable.ListBuffer
@@ -70,7 +69,7 @@ object FormElement {
     def asInt(value: String) = Try(value.trim.toInt) match {
       case Failure(_)                         => Left("invalid integer")
       case Success(a) if a >= min && a <= max => Right(a)
-      case Success(a)                         => Left(s"$a should be between ${min} and $max")
+      case Success(a)                         => Left(s"\$a should be between \${min} and \$max")
     }
 
     newFormElement(field, initialValue, hint, asInt)
@@ -84,7 +83,7 @@ object FormElement {
     def asInt(value: String) = Try(value.trim.toDouble) match {
       case Failure(_)                         => Left("invalid double")
       case Success(a) if a >= min && a <= max => Right(a)
-      case Success(a)                         => Left(s"$a should be between ${min} and $max")
+      case Success(a)                         => Left(s"\$a should be between \${min} and \$max")
     }
 
     newFormElement(field, initialValue, hint, asInt)
@@ -163,7 +162,7 @@ object FormElement {
               right
             } else {
               Left(
-                s"The minimum equation size needs to be fewer than the number of available unique inputs (e.g. ${maxOpt
+                s"The minimum equation size needs to be fewer than the number of available unique inputs (e.g. \${maxOpt
                   .getOrElse(0)})")
             }
           case left => left
