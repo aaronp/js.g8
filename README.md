@@ -2,8 +2,15 @@ A [Giter8](http://www.foundweekends.org/giter8/index.html) template for a single
 
 ## Usage
 
-Run
-
 ```bash
-sbt new aaronp/single.g8
+sbt new aaronp/js.g8
+```
+
+### Testing locally
+
+You need 'brew install g8', but then 
+```bash
+ g8 file://. --name=localtest --force
+ cd localtest
+ sbt test
 ```

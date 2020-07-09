@@ -4,7 +4,7 @@
 
 enablePlugins(ScriptedPlugin)
 
-name := "First Template"
+name := "A scalajs template project"
 
 addCommandAlias("test", "g8Test")
 

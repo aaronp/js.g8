@@ -1,5 +1,4 @@
 import java.nio.file.Path
-import org.scoverage.coveralls.Imports.CoverallsKeys._
 import sbt.KeyRanks
 import sbt.Keys.{libraryDependencies, publishMavenStyle}
 import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
@@ -9,9 +8,8 @@ ThisBuild / organization := "$organization$"
 
 val projectName = "$name;format="camel"$"
 val username            = "$user_name;format="norm"$"
-val scalaTwelve         = "2.12.10"
-val scalaThirteen       = "2.13.0"
-val defaultScalaVersion = scalaTwelve
+val scalaThirteen       = "2.13.3"
+val defaultScalaVersion = scalaThirteen
 
 name := projectName
 
@@ -23,17 +21,10 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin) // see https://jonas.github.io/paradox-material-theme/getting-started.html
 
 ThisBuild / scalaVersion := defaultScalaVersion
-val scalaVersions = Seq(scalaTwelve)
-crossScalaVersions := scalaVersions //, scalaThirteen)
+val scalaVersions = Seq(scalaThirteen)
+ThisBuild / crossScalaVersions := scalaVersions 
 
 paradoxProperties += ("project.url" -> s"https://\$username.github.io/\$projectName/docs/current/")
-
-val testDependencies = List(
-  "junit" % "junit" % "4.12" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.8" % "test",
-  "org.scala-lang.modules" %% "scala-xml" % "1.1.1" % "test",
-  "org.pegdown" % "pegdown" % "1.6.0" % "test"
-)
 
 val scalacSettings = List(
   "-deprecation", // Emit warning and location for usages of deprecated APIs.
@@ -58,7 +49,6 @@ val commonSettings: Seq[Def.Setting[_]] = Seq(
   autoAPIMappings := true,
   exportJars := false,
   crossScalaVersions := scalaVersions,
-  libraryDependencies ++= testDependencies,
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
   scalacOptions ++= scalacSettings,
   buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -71,13 +61,11 @@ val commonSettings: Seq[Def.Setting[_]] = Seq(
       oldStrategy(x)
   }
 )
-coverallsTokenFile := Option(
-  (sbt.io.Path.userHome / ".sbt" / ".coveralls.\$projectName").asPath.toString)
 
 val $name;format="camel"$Project = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .withoutSuffixFor(JVMPlatform)
-  .in(file("ga"))
+  .in(file("."))
   .jvmSettings(commonSettings: _*)
   .jvmSettings(
     publishMavenStyle := true,
@@ -85,32 +73,30 @@ val $name;format="camel"$Project = crossProject(JSPlatform, JVMPlatform)
     coverageMinimum := 90,
     coverageFailOnMinimum := true
   )
-  .jvmSettings(
-    libraryDependencies ++= List(
-      "com.typesafe" % "config" % "1.3.4",
-      "com.github.aaronp" %% "args4c" % "0.7.0",
-      "com.github.aaronp" %% "eie" % "0.0.5"
-    ))
+  .jvmSettings()
   .settings(
     libraryDependencies ++= List(
-      "org.typelevel" %%% "cats-core" % "2.0.0"
+      "com.lihaoyi" %%% "scalatags" % "$scalatags_version$",
+      "org.scalatest" %%% "scalatest" % "$scalatest_version$" % "test",
+      "io.monix" %%% "monix-reactive" % "$monix_version$",
+      "io.monix" %%% "monix-eval" % "$monix_version$"
+      // "org.typelevel" %%% "cats-core" % "2.0.0"
     )
   )
   .jsSettings(
     libraryDependencies ++= List(
-      "com.lihaoyi" %%% "scalatags" % "0.7.0",
-      "com.lihaoyi" %%% "scalarx" % "0.4.0",
-      "org.scalatest" %%% "scalatest" % "3.0.8" % "test"
+      "org.scala-js" %%% "scalajs-java-time" % "$scalajstime_version$"
+      //"com.lihaoyi" %%% "scalarx" % "0.4.0"
     ))
 
-lazy val $name;format="camel"$ProjectJVM = $name;format="camel"$Project.jvm
-lazy val $name;format="camel"$ProjectJS = $name;format="camel"$Project.js
+lazy val $name;format="camel"$JVM = $name;format="camel"$Project.jvm
+lazy val $name;format="camel"$JS = $name;format="camel"$Project.js
 
 lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .enablePlugins(SiteScaladocPlugin)
   .enablePlugins(ParadoxPlugin)
-  .aggregate($name;format="camel"$ProjectJVM, $name;format="camel"$ProjectJS)
+  .aggregate($name;format="camel"$JVM, $name;format="camel"$JS)
   .settings(
     publish := {},
     publishLocal := {}
@@ -153,12 +139,12 @@ lazy val makePage =
 makePage := {
   import eie.io._
   val jsArtifacts = {
-    val path: Path = (fullOptJS in ($name;format="camel"$ProjectJS, Compile)).value.data.asPath
+    val path: Path = (fullOptJS in ($name;format="camel"$JS, Compile)).value.data.asPath
     val dependencyFiles =
       path.getParent.find(_.fileName.endsWith("-jsdeps.js")).toList
     path :: dependencyFiles
   }
-  val jsResourceDir = (resourceDirectory in ($name;format="camel"$ProjectJS, Compile)).value.toPath
+  val jsResourceDir = (resourceDirectory in ($name;format="camel"$JS, Compile)).value.toPath
 
   val targetDir = (baseDirectory.value / "target" / "page").toPath.mkDirs()
 
