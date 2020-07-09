@@ -6,11 +6,17 @@ A [Giter8](http://www.foundweekends.org/giter8/index.html) template for a single
 sbt new aaronp/js.g8
 ```
 
+Which creates a scalajs project where you can then run:
+```
+sbt makePage
+```
+
+
 ### Testing locally
 
-You need 'brew install g8', but then 
-```bash
- g8 file://. --name=localtest --force
- cd localtest
- sbt test
+You need g8 (e.g. "brew install g8"), but then just run 
+
 ```
+./test.sh
+```
+which should open an sbt project in your new 'localtest' project.
