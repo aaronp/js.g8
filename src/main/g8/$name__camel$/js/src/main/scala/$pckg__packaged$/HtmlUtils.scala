@@ -1,4 +1,4 @@
-package $package;format="lower,package"$
+package $pckg;format="lower,package"$
 
 import org.scalajs.dom.document
 import org.scalajs.dom.html.{Canvas, Div}

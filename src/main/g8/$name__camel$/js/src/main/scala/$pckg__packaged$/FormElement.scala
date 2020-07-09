@@ -1,4 +1,4 @@
-package $package;format="lower,package"$
+package $pckg;format="lower,package"$
 
 import scalatags.JsDom.all.{value, _}
 
@@ -111,95 +111,5 @@ object FormElement {
     newFormElement[Set[Int]](field, initialValue, hint, asInt)
   }
 
-  object configListItems {
-
-    def elements: List[FormElement[_]] = formElements.toList
-
-    val targetNr =
-      FormElement.int("Target Number",
-                      "378",
-                      "The number we're trying to find",
-                      0,
-                      1000000000)
-    val inputNumbers =
-      FormElement.ints("Using Input Numbers",
-                       "25 3 8 12 9 15",
-                       "The numbers available to reach the target number")
-    val seed = FormElement.optLong(
-      "Random Value Seed",
-      "",
-      "An optional value with which to initialise our random value generator")
-    val maxGen = FormElement.int(
-      "Max Generations",
-      "60",
-      "How many generations to allow before we quit without an answer",
-      2,
-      5000)
-    val populationSize = FormElement.int(
-      "Population Size",
-      "200",
-      "How large we should allow the population to grow")
-
-    val mutationProbability = FormElement.double(
-      "Mutation Probability",
-      "0.01",
-      "A number between 0.0 and 1.0 representing the probability of a mutation",
-      0.0,
-      1.0)
-
-    val minEquationSize = {
-      val base = FormElement.int(
-        "Minimum Equation Size",
-        "3",
-        "The smallest equation length to use in the initial population")
-
-      def checkInputs(str: String) = {
-        base.validate(str) match {
-          case right @ Right(size) =>
-            val maxOpt = inputNumbers.currentValue().map(_.size)
-            val minSizeLessThanAvailNrs = maxOpt.exists(_ >= size)
-            if (minSizeLessThanAvailNrs) {
-              right
-            } else {
-              Left(
-                s"The minimum equation size needs to be fewer than the number of available unique inputs (e.g. \${maxOpt
-                  .getOrElse(0)})")
-            }
-          case left => left
-        }
-      }
-
-      base.copy(validate = checkInputs)
-    }
-
-    val maxNodes =
-      FormElement.int(
-        "Max Solution Nodes to Display",
-        "20",
-        "The maximum number of nodes to show when displaying our solution graph",
-        1,
-        50)
-
-    def asSettings: Option[(Option[Long], AlgoSettings[Equation])] = {
-      for {
-        targetNumber <- targetNr.currentValue()
-        inputNumbers <- inputNumbers.currentValue()
-        maxPopulation <- populationSize.currentValue()
-        mutationProbability <- mutationProbability.currentValue()
-        maxGenerations <- maxGen.currentValue()
-        seed <- seed.currentValue()
-      } yield {
-
-        val settings = CountdownConfig.makeAlgoSettings(
-          targetNumber = targetNumber,
-          inputNumbers = inputNumbers,
-          maxPopulation = maxPopulation,
-          mutationProbability = mutationProbability,
-          maxGenerations = maxGenerations
-        )
-        (seed, settings)
-      }
-    }
-  }
 
 }

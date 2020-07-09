@@ -1,4 +1,4 @@
-package $package;format="lower,package"$
+package $pckg;format="lower,package"$
 
 import org.scalajs.dom.html.{Div, Paragraph}
 import org.scalajs.dom.raw.HTMLTextAreaElement
@@ -16,13 +16,12 @@ import scala.util.Try
 @JSExportTopLevel("MainPage")
 object MainPage {
 
-  private var logContent = ListBuffer[String]()
-
   @JSExport
   def render(computeContainerId: String) = {
-    val computeContainer = HtmlUtils.divById(computeContainerId)
-    computeContainer.innerHTML = ""
+      val computeContainer = HtmlUtils.divById(computeContainerId)
 
+      computeContainer.innerHTML = ""
+      computeContainer.appendChild(h1("Hello World").render)
   }
 
 }

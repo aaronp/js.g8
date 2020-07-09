@@ -15,7 +15,6 @@ name := projectName
 
 organization := s"com.github.\$username"
 
-enablePlugins(GhpagesPlugin)
 enablePlugins(ParadoxPlugin)
 enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin) // see https://jonas.github.io/paradox-material-theme/getting-started.html
@@ -62,10 +61,10 @@ val commonSettings: Seq[Def.Setting[_]] = Seq(
   }
 )
 
-val $name;format="camel"$Project = crossProject(JSPlatform, JVMPlatform)
+val $name;format="camel"$ = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .withoutSuffixFor(JVMPlatform)
-  .in(file("."))
+  .in(file("$name;format="camel"$"))
   .jvmSettings(commonSettings: _*)
   .jvmSettings(
     publishMavenStyle := true,
@@ -89,8 +88,8 @@ val $name;format="camel"$Project = crossProject(JSPlatform, JVMPlatform)
       //"com.lihaoyi" %%% "scalarx" % "0.4.0"
     ))
 
-lazy val $name;format="camel"$JVM = $name;format="camel"$Project.jvm
-lazy val $name;format="camel"$JS = $name;format="camel"$Project.js
+lazy val $name;format="camel"$JVM = $name;format="camel"$.jvm
+lazy val $name;format="camel"$JS = $name;format="camel"$.js
 
 lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
@@ -102,36 +101,6 @@ lazy val root = (project in file("."))
     publishLocal := {}
   )
 
-Compile / paradoxMaterialTheme ~= {
-  _.withLanguage(java.util.Locale.ENGLISH)
-    .withColor("blue", "grey")
-    //.withLogoIcon("cloud")
-    .withRepository(uri(s"https://github.com/\$username/\$projectName"))
-    .withSocial(uri("https://github.com/\$username"))
-    .withoutSearch()
-}
-
-siteSourceDirectory := target.value / "paradox" / "site" / "main"
-
-siteSubdirName in SiteScaladoc := "api/latest"
-
-git.remoteRepo := s"git@github.com:\$username/$name;format="camel"$.git"
-ghpagesNoJekyll := true
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
-publishConfiguration := publishConfiguration.value.withOverwrite(true)
-publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
-
-test in assembly := {}
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (version.value.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
-
-//credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
-
 lazy val makePage =
   taskKey[Unit]("Puts the javascript and html resources together")
     .withRank(KeyRanks.APlusTask)
@@ -139,12 +108,12 @@ lazy val makePage =
 makePage := {
   import eie.io._
   val jsArtifacts = {
-    val path: Path = (fullOptJS in ($name;format="camel"$JS, Compile)).value.data.asPath
+    val path: Path = (fullOptJS in($name;format="camel"$JS, Compile)).value.data.asPath
     val dependencyFiles =
-      path.getParent.find(_.fileName.endsWith("-jsdeps.js")).toList
+      path.getParent.find(_.fileName.endsWith("jsdeps.js")).toList
     path :: dependencyFiles
   }
-  val jsResourceDir = (resourceDirectory in ($name;format="camel"$JS, Compile)).value.toPath
+  val jsResourceDir = (resourceDirectory in($name;format="camel"$JS, Compile)).value.toPath
 
   val targetDir = (baseDirectory.value / "target" / "page").toPath.mkDirs()
 
@@ -169,30 +138,11 @@ makePage := {
   IO.copy(onDemand, CopyOptions().withOverwrite(false))
 }
 
-buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
-buildInfoPackage := "$package;format=package$.build"
-
-// see http://scalameta.org/scalafmt/
-scalafmtOnCompile in ThisBuild := true
-scalafmtVersion in ThisBuild := "1.4.0"
-
-// see http://www.scalatest.org/user_guide/using_scalatest_with_sbt
-testOptions in Test += (Tests.Argument(TestFrameworks.ScalaTest, "-h", s"target/scalatest-reports", "-oN"))
-
-pomExtra := {
-  <url>https://github.com/{username}/{projectName}</url>
-    <licenses>
-      <license>
-        <name>Apache 2</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <developers>
-      <developer>
-        <id>{username}</id>
-        <name>{username}</name>
-        <url>http://github.com/{username}</url>
-      </developer>
-    </developers>
+Compile / paradoxMaterialTheme ~= {
+  _.withLanguage(java.util.Locale.ENGLISH)
+    .withColor("blue", "grey")
+    //.withLogoIcon("cloud")
+    .withRepository(uri(s"https://github.com/\$username/\$projectName"))
+    .withSocial(uri("https://github.com/\$username"))
+    .withoutSearch()
 }
