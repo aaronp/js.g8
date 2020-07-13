@@ -1,6 +1,6 @@
 package $pckg;format="lower,package"$
 
-import org.scalajs.dom.document
+import org.scalajs.dom.{document, window}
 import org.scalajs.dom.html.{Canvas, Div}
 import org.scalajs.dom.raw.{HTMLElement, Node}
 
@@ -24,4 +24,5 @@ object HtmlUtils {
 
   def elmById(id: String) = document.getElementById(id)
 
+  def log(msg: String) = window.console.log("INFO:" + msg)
 }
