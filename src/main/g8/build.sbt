@@ -8,8 +8,7 @@ ThisBuild / organization := "$organization$"
 
 val projectName = "$name;format="camel"$"
 val username            = "$user_name;format="norm"$"
-val scalaThirteen       = "2.13.3"
-val defaultScalaVersion = scalaThirteen
+val defaultScalaVersion = "3.1.0"
 
 name := projectName
 
@@ -20,7 +19,7 @@ enablePlugins(SiteScaladocPlugin)
 enablePlugins(ParadoxMaterialThemePlugin) // see https://jonas.github.io/paradox-material-theme/getting-started.html
 
 ThisBuild / scalaVersion := defaultScalaVersion
-val scalaVersions = Seq(scalaThirteen)
+val scalaVersions = Seq(defaultScalaVersion)
 ThisBuild / crossScalaVersions := scalaVersions 
 
 paradoxProperties += ("project.url" -> s"https://\$username.github.io/\$projectName/docs/current/")
@@ -41,7 +40,6 @@ val scalacSettings = List(
 )
 
 val commonSettings: Seq[Def.Setting[_]] = Seq(
-  //version := parentProject.settings.ver.value,
   organization := s"com.github.\${username}",
   scalaVersion := defaultScalaVersion,
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
@@ -76,10 +74,7 @@ val $name;format="camel"$ = crossProject(JSPlatform, JVMPlatform)
   .settings(
     libraryDependencies ++= List(
       "com.lihaoyi" %%% "scalatags" % "$scalatags_version$",
-      "org.scalatest" %%% "scalatest" % "$scalatest_version$" % "test",
-      "io.monix" %%% "monix-reactive" % "$monix_version$",
-      "io.monix" %%% "monix-eval" % "$monix_version$"
-      // "org.typelevel" %%% "cats-core" % "2.0.0"
+      "org.scalatest" %%% "scalatest" % "$scalatest_version$" % Test
     )
   )
   .jsSettings(
