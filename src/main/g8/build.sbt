@@ -79,7 +79,6 @@ val $name;format="camel"$ = crossProject(JSPlatform, JVMPlatform)
   )
   .jsSettings(
     libraryDependencies ++= List(
-      "org.scala-js" %%% "scalajs-java-time" % "$scalajstime_version$"
       //"com.lihaoyi" %%% "scalarx" % "0.4.0"
     ))
 
